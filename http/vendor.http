@@ -1,0 +1,25 @@
+POST http://localhost:3200/api/monitor-nd/vendors/user/addUserVendor
+Content-Type: application/json
+
+{
+  "person": {
+    "confirmPassword": "Password1!",
+    "email": "hbellido@gmail.com",
+    "address": "Sin direccion",
+    "country": "Bolivia",
+    "firstName": "Hilarion",
+    "lastName": "Bellido",
+    "password": "Password1!",
+    "userName": "hilarion",
+    "mobilNumber": "89182928"
+  },
+  "user": {
+    "address": "Sin direccion",
+    "country": "Bolivia",
+    "firstName": "Hilarion",
+    "lastName": "Bellido",
+    "password": "Password1!",
+    "userName": "hilarion",
+    "mobilNumber": "89182928"
+  }
+}

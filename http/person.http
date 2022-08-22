@@ -1,0 +1,7 @@
+POST http://localhost:3200/api/monitor-nd/person/addPerson
+Content-Type: application/json
+
+{
+  "name": "Maria",
+  "lastName": "Fernandez"
+}
