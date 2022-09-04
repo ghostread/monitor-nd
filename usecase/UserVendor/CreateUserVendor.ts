@@ -1,8 +1,8 @@
-import { PersonServiceI } from '../../service/person/PersonServiceI';
+import { IPersonService } from '../../service/person/IPersonService';
 import { PersonRequest } from '../../dto/request/PersonRequest';
 import { PersonResponse } from '../../dto/response/PersonResponse';
 import { PersonServiceImp } from '../../service/person/PersonServiceImp';
-import { Person, User } from '@pxp-nd/common';
+import { Person, Role, User } from '@pxp-nd/common';
 import { IUserService } from '../../service/User/IUserService';
 import { UserService } from '../../service/User/UserService';
 import { RoleService } from '../../service/Role/RoleService';
@@ -12,7 +12,7 @@ import { VendorUserRequest } from '../../dto/request/VendorUserRequest';
 import { UserRequest } from '../../dto/request/UserRequest';
 
 export class CreateUserVendorUseCase {
-  private readonly personService: PersonServiceI;
+  private readonly personService: IPersonService;
   private readonly userService: IUserService;
   private readonly roleService: IRoleService;
 
@@ -22,12 +22,10 @@ export class CreateUserVendorUseCase {
     this.roleService = new RoleService();
   }
 
-  public async execute(vendorUserRequest: VendorUserRequest): Promise<any> {
+  public async execute(vendorUserRequest: VendorUserRequest): Promise<User> {
     const role = await this.roleService.findRoleByRole('vendor');
-    const person = await this.personService.addPerson(this.buildPerson(vendorUserRequest.person));
-    return this.userService.createUser(this.buildUser(vendorUserRequest.user, person.personId, role.roleId));
-
-    // return userVendor;
+    const person = this.buildPerson(vendorUserRequest.person);
+    return this.userService.createUser(this.buildUser(vendorUserRequest.user, person, role));
   }
 
   private buildPerson(personRequest: PersonRequest): Person {
@@ -47,15 +45,16 @@ export class CreateUserVendorUseCase {
     return person;
   }
 
-  private buildUser(userRequest: UserRequest, personId: number, roleId: number): User {
-    const userVendor = new User();
-    userVendor.personId = personId;
-    userVendor.roleId = roleId;
-    userVendor.username = userRequest.username;
+  private buildUser(userRequest: UserRequest, person: Person, role: Role): User {
     const hashSalt = genPassword(userRequest.password as string);
+    const userVendor = new User();
+    userVendor.personId = person.personId;
+    userVendor.roleId = role.roleId;
+    userVendor.username = userRequest.userName;
     userVendor.hash = hashSalt.hash;
     userVendor.salt = hashSalt.salt;
-    userVendor.createdBy = 'admin';
+    userVendor.person = person;
+    userVendor.roles = [role];
     return userVendor;
   }
 

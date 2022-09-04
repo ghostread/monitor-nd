@@ -1,12 +1,10 @@
-import { Person, Role, User } from '@pxp-nd/common';
+import { User } from '@pxp-nd/common';
 import { Authentication, Controller, DbSettings, Delete, Get, Patch, Post, ReadOnly, Route } from '@pxp-nd/core';
 import { getManager } from 'typeorm';
 import { VendorUser as VendorUserModel } from '../entity/VendorUser';
 import { VendorUserRequest } from '../dto/request/VendorUserRequest';
-import { CreatePersonUseCase } from '../usecase/Person/CreatePersonUseCase';
 import { CreateUserVendorUseCase } from '../usecase/UserVendor/CreateUserVendor';
 
-// @Model('vendor/Vendor')
 @Route('/vendors/user')
 export default class VendorUser extends Controller {
   private readonly createUserVendorUseCase = new CreateUserVendorUseCase();
@@ -16,17 +14,18 @@ export default class VendorUser extends Controller {
   @DbSettings('Orm')
   @ReadOnly(true)
   @Authentication(false)
-  async find(params: Record<string, unknown>): Promise<VendorUserModel[]> {
-    const vendors = await getManager().find(VendorUserModel);
-    return vendors;
-  }
 
   @Post()
   @ReadOnly(true)
   @DbSettings('Orm')
   @Authentication(false)
-  async addUserVendor(vendorUserRequest: VendorUserRequest): Promise<User>{
+  createVendorUser(vendorUserRequest: VendorUserRequest): Promise<User> {
     return this.createUserVendorUseCase.execute(vendorUserRequest);
+  }
+
+  async find(params: Record<string, unknown>): Promise<VendorUserModel[]> {
+    const vendors = await getManager().find(VendorUserModel);
+    return vendors;
   }
 
   @Post()

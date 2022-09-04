@@ -1,17 +1,18 @@
-import { PersonServiceI } from '../../service/person/PersonServiceI';
+import { IPersonService } from '../../service/person/IPersonService';
 import { PersonRequest } from '../../dto/request/PersonRequest';
 import { PersonResponse } from '../../dto/response/PersonResponse';
 import { PersonServiceImp } from '../../service/person/PersonServiceImp';
 import { Person } from '@pxp-nd/common';
 
 export class CreatePersonUseCase {
-  private readonly personService: PersonServiceI;
+  private readonly personService: IPersonService;
 
   constructor() {
     this.personService = new PersonServiceImp();
   }
 
   public async execute(personRequest: PersonRequest): Promise<PersonResponse> {
+
     const person: Person = await this.personService.addPerson(this.buildPerson(personRequest));
     return this.buildSavePersonResponse(person);
   }

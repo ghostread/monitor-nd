@@ -1,6 +1,6 @@
 import { IUserService } from './IUserService';
 import { User } from '@pxp-nd/common';
-import { UserRepository } from '@pxp-nd/repositories';
+import { UserRepository } from '../../repositories/UserRepository';
 
 export class UserService implements IUserService {
   private readonly userRepository: UserRepository;
@@ -9,8 +9,11 @@ export class UserService implements IUserService {
     this.userRepository = new UserRepository();
   }
 
-  createUser(user: User): Promise<User> {
+  createUser(user: User): Promise<any> {
     return this.userRepository.save(user);
   }
 
+  getUser(id: number): Promise<User> {
+    return this.userRepository.findOneOrFail(id);
+  }
 }

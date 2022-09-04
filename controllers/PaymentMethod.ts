@@ -1,38 +1,23 @@
-import {
-  Authentication,
-  Controller,
-  DbSettings,
-  Delete,
-  Get,
-  Patch,
-  Post,
-  ReadOnly,
-  Route
-} from '@pxp-nd/core';
+import { Controller, DbSettings, Delete, Get, Patch, Post, ReadOnly, Route } from '@pxp-nd/core';
 import { getManager } from 'typeorm';
 import { PaymentMethod as PaymentMethodModel } from '../entity/PaymentMethod';
+import { CreatePaymentMethodUseCase } from '../usecase/PaymentMethod/CreatePaymentMethodUseCase';
+import { PaymentMethodResponse } from '../dto/response/PaymentMethodResponse';
+
 @Route('/paymentmethod')
 export default class PaymentMethod extends Controller {
-  @Get()
-  @DbSettings('Orm')
-  @ReadOnly(true)
-  @Authentication(false)
+
+  private readonly createPaymentMethodUseCase = new CreatePaymentMethodUseCase();
+
+  @Get('', { readOnly: true, dbSettings: 'Orm', authentication: false })
   async find(params: Record<string, unknown>): Promise<PaymentMethodModel[]> {
     const paymentMethod = await getManager().find(PaymentMethodModel);
     return paymentMethod;
   }
 
-  @Post()
-  @ReadOnly(true)
-  @DbSettings('Orm')
-  @Authentication(false)
-  async save(params: any): Promise<PaymentMethodModel> {
-    console.log(params);
-
-    const paymentMethod = await getManager().save(PaymentMethodModel, {
-      ...params
-    });
-    return paymentMethod;
+  @Post('/save/:userId', { readOnly: true, dbSettings: 'Orm', authentication: false })
+  save(params: any): Promise<PaymentMethodResponse> {
+    return this.createPaymentMethodUseCase.execute(params.userId, params);
   }
 
   @Patch('/edit/:id')

@@ -1,6 +1,6 @@
+import { User } from '@pxp-nd/common';
 import { BaseRepository } from './BaseRepository';
 import { getConnectionManager } from 'typeorm';
-import { User } from '../entity/User';
 
 export class UserRepository extends BaseRepository<User> {
   constructor() {

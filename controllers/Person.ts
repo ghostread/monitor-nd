@@ -14,9 +14,8 @@ export default class Person extends Controller {
   @ReadOnly(false)
   @Authentication(false)
   @Log(true)
+  
   addPerson(personRequest: PersonRequest): Promise<PersonResponse> {
     return this.createPersonUseCase.execute(personRequest);
   }
-
-
 }

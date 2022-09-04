@@ -1,9 +1,9 @@
 import { PersonRequest } from './PersonRequest';
 import { UserRequest } from './UserRequest';
-import { PaymentRequest } from './PaymentRequest';
+import { PaymentMethodRequest } from './PaymentMethodRequest';
 
 export class VendorUserRequest {
   user: UserRequest;
   person: PersonRequest;
-  paymentMethod?: PaymentRequest;
+  // paymentMethod?: PaymentMethodRequest;
 }
